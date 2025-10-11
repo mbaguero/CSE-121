@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+/home/mbaguero/esp/lab1/lab1_3/build/CMakeFiles/bootloader
+/home/mbaguero/esp/lab1/lab1_3/build/CMakeFiles/bootloader.rule
+/home/mbaguero/esp/lab1/lab1_3/build/CMakeFiles/bootloader-complete.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+/home/mbaguero/esp/lab1/lab1_3/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule

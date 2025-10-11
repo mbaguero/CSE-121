@@ -1,0 +1,2 @@
+source /home/mbaguero/esp/lab1/lab1_3/build/gdbinit/symbols
+source /home/mbaguero/esp/lab1/lab1_3/build/gdbinit/connect
