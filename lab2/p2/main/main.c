@@ -70,10 +70,6 @@ static esp_err_t shtc3_write_cmd(i2c_master_dev_handle_t dev_handle, uint16_t cm
 		pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)
 	);
 
-	if (err != ESP_OK){
-		ESP_LOGE(TAG, "I2C write failed: %d", err);
-	}
-
 	return err;
 
 }
