@@ -123,21 +123,21 @@ void app_main(void)
 			continue;
 		}
 
-		vTaskDelay(pdMS_TO_TICKS(2));
+		vTaskDelay(pdMS_TO_TICKS(1));
 
 		if (shtc3_write_cmd(dev_handle, SHTC3_MEASURE_CMD) != ESP_OK) {
 			vTaskDelay(pdMS_TO_TICKS(1000));
 			continue;
 		}
 
-		vTaskDelay(pdMS_TO_TICKS(15));
+		vTaskDelay(pdMS_TO_TICKS(20));
 
 		if (shtc3_read_cmd(dev_handle, &temp_raw, &humd_raw) == ESP_OK){
 			float temp_C = shtc3_raw_to_celsius(temp_raw);
 			float humd = shtc3_raw_to_humd(humd_raw);
 			float temp_F = temp_C * 9 / 5 + 32;
 
-			ESP_LOGI(TAG, "Temperature is %.0fF with a %.0f%% humdity", temp_F, humd);
+			ESP_LOGI(TAG, "Temperature is %.0fC (or %.0fF) with a %.0f%% humdity", temp_C, temp_F, humd);
 		}
 
 		shtc3_write_cmd(dev_handle, SHTC3_SLEEP_CMD);
