@@ -10,7 +10,7 @@ static const char *TAG = "SHTC3";
 #define I2C_MASTER_SCL_IO		8
 #define I2C_MASTER_SDA_IO		10
 #define I2C_MASTER_NUM			I2C_NUM_0
-#define I2C_MASTER_FREQ_HZ		400000
+#define I2C_MASTER_FREQ_HZ		100000
 #define I2C_MASTER_TX_BUF_DISABLE  	0
 #define I2C_MASTER_RX_BUF_DISABLE	0
 #define I2C_MASTER_TIMEOUT_MS		1000
@@ -45,7 +45,6 @@ static esp_err_t shtc3_read_cmd(i2c_master_dev_handle_t dev_handle, uint16_t *te
 		pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)
 		);	
 	
-	if (err !=  ESP_OK) return err;
 
 	if (shtc3_crc8(read_buf, 2) != read_buf [2] || shtc3_crc8(read_buf + 3, 2) != read_buf[5]) {
 		ESP_LOGE(TAG, "CRC check failed");
@@ -56,20 +55,26 @@ static esp_err_t shtc3_read_cmd(i2c_master_dev_handle_t dev_handle, uint16_t *te
 	*temp_raw = (read_buf[0] << 8) | read_buf[1];
 	*humd_raw = (read_buf[3] << 8) | read_buf[4];
 
-	return  ESP_OK;
+	return  err;
 
 }
 
 static esp_err_t shtc3_write_cmd(i2c_master_dev_handle_t dev_handle, uint16_t cmd)
 {
-	uint8_t write_buf[2] = {(cmd&0xff00>>8),(cmd&0xff)};
+	uint8_t write_buf[2] = {((cmd&0xff00)>>8), (cmd&0xff)};
 
-	return i2c_master_transmit(
+	esp_err_t err =  i2c_master_transmit(
 		dev_handle,
 		write_buf,
 		sizeof(write_buf),
 		pdMS_TO_TICKS(I2C_MASTER_TIMEOUT_MS)
 	);
+
+	if (err != ESP_OK){
+		ESP_LOGE(TAG, "I2C write failed: %d", err);
+	}
+
+	return err;
 
 }
 
@@ -116,11 +121,18 @@ void app_main(void)
 	uint16_t temp_raw, humd_raw;
 
 	while(1) {
-		shtc3_write_cmd(dev_handle, SHTC3_WAKEUP_CMD);
-		
-		vTaskDelay(pdMS_TO_TICKS(1));
 
-		shtc3_write_cmd(dev_handle, SHTC3_MEASURE_CMD);
+		if (shtc3_write_cmd(dev_handle, SHTC3_WAKEUP_CMD) != ESP_OK){
+			vTaskDelay(pdMS_TO_TICKS(1000));
+			continue;
+		}
+
+		vTaskDelay(pdMS_TO_TICKS(2));
+
+		if (shtc3_write_cmd(dev_handle, SHTC3_MEASURE_CMD) != ESP_OK) {
+			vTaskDelay(pdMS_TO_TICKS(1000));
+			continue;
+		}
 
 		vTaskDelay(pdMS_TO_TICKS(15));
 
